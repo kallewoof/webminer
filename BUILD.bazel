@@ -6,6 +6,31 @@
 
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
+config_setting(
+    name = "linux_x86_64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+config_setting(
+    name = "macos_x86_64",
+    values = {
+        "apple_platform_type": "macos",
+        "cpu": "darwin_x86_64",
+    },
+    constraint_values = [
+        "@platforms//os:macos",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+config_setting(
+    name = "windows",
+    constraint_values = ["@platforms//os:windows"],
+)
+
 cc_library(
     name = "async",
     hdrs = [
@@ -22,7 +47,7 @@ cc_library(
 cc_library(
     name = "common",
     defines = select({
-        "@bazel_tools//src/conditions:windows": ["WIN32"],
+        ":windows": ["WIN32"],
         "//conditions:default": [],
     }),
     hdrs = [
@@ -57,7 +82,7 @@ cc_library(
 cc_library(
     name = "random",
     defines = select({
-        "@bazel_tools//src/conditions:windows": ["WIN32"],
+        ":windows": ["WIN32"],
         "//conditions:default": [],
     }),
     hdrs = [
@@ -194,8 +219,8 @@ cc_library(
         "wallet.cc",
     ],
     deps = [
-        "@boost//:filesystem",
-        "@boost//:interprocess",
+        #"@boost//:filesystem",
+        #"@boost//:interprocess",
         "@com_google_absl//absl/strings:strings",
         "@com_google_absl//absl/time:time",
         ":webcash",
@@ -255,7 +280,7 @@ cc_binary(
     name = "webcashd",
     srcs = ["webcashd.cc"],
     deps = [
-        "@boost//:filesystem",
+        #"@boost//:filesystem",
         "@com_google_absl//absl/flags:parse",
         "@com_google_absl//absl/flags:usage",
         "@com_google_absl//absl/strings:strings",
@@ -304,7 +329,7 @@ cmake(
 cmake(
     name = "drogon",
     deps = [
-        "@boost//:filesystem",
+        # "@boost//:filesystem",
         "@brotli//:brotlidec",
         "@brotli//:brotlienc",
         "@jsoncpp//:jsoncpp",
@@ -319,7 +344,7 @@ cmake(
         "BUILD_POSTGRESQL": "ON",
     },
     linkopts = select({
-        "@bazel_tools//src/conditions:linux": ['-ldl', '-luuid', '-lcrypto', '-lssl', '-lstdc++fs'],
+        ":linux_x86_64": ['-ldl', '-luuid', '-lcrypto', '-lssl', '-lstdc++fs'],
         "//conditions:default": [],
     }),
     lib_source = "@drogon//:all_srcs",
@@ -345,7 +370,7 @@ configure_make(
     lib_source = "@postgres//:all_srcs",
     out_static_libs = ["libpgcommon.a"],
     out_shared_libs = select({
-        "@bazel_tools//src/conditions:darwin": [
+        ":macos_x86_64": [
             "libpq.dylib",
         ],
         "//conditions:default": [

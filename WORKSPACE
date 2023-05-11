@@ -44,8 +44,8 @@ git_repository(
 git_repository(
     name = "brotli",
     remote = "https://github.com/google/brotli",
-    commit = "e61745a6b7add50d380cfd7d3883dd6c62fc2c71",
-    shallow_since = "1598537575 +0200",
+    commit = "ed1995b6bda19244070ab5d331111f16f67c8054",
+    shallow_since = "2023-01-01 +0200",
 )
 
 # googletest source code repository
@@ -151,9 +151,9 @@ http_archive(
 http_archive(
     name = "zlib",
     build_file_content = _ALL_CONTENT,
-    strip_prefix = "zlib-1.2.12",
-    url = "https://zlib.net/zlib-1.2.12.tar.gz",
-    sha256 = "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9",
+    strip_prefix = "zlib-1.2.13",
+    url = "https://zlib.net/zlib-1.2.13.tar.gz",
+    sha256 = "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30",
 )
 
 # End of File
